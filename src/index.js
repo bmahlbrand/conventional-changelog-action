@@ -148,6 +148,7 @@ async function run() {
       core.info('Push all changes')
       try {
         await git.push()
+        await git.pushLFS()
       } catch (error) {
         core.setFailed(error.message)
       }
