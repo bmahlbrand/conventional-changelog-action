@@ -110,6 +110,15 @@ module.exports = new (class Git {
   )
 
   /**
+   * Push all LFS changes
+   *
+   * @return {Promise<>}
+   */
+  pushLFS = () => (
+    this.exec(`lfs push origin ${branch}`)
+  )
+
+  /**
    * Updates the origin remote
    *
    * @param repo
