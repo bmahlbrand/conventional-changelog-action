@@ -146,9 +146,11 @@ async function run() {
 
       // Create the new tag
       if(!skipTag) {
+        core.info('Create tag')
         await git.createTag(gitTag)
+      } else{
+        core.info('Skip tag')
       }
-      
 
       core.info('Push all changes')
       try {
