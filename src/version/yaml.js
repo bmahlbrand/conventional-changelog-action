@@ -24,6 +24,7 @@ module.exports = new (class Yaml extends BaseVersioning{
     if(versionRegex !== null){
       // Use the regex to edit the old version
       this.newVersion = versionRegex.replace("<version>", oldVersion)
+      core.info('Used version regex: ' + this.newVersion)
     }
     else {
       // Get the new version
@@ -31,10 +32,8 @@ module.exports = new (class Yaml extends BaseVersioning{
         releaseType,
         oldVersion,
       )
+      core.info('Bumped version normally (NO version regex): ' + this.newVersion)
     }
-
-
-    
 
     // Update the file
     if (oldVersion) {
@@ -44,8 +43,8 @@ module.exports = new (class Yaml extends BaseVersioning{
       this.update(
         // We use replace instead of yaml.stringify so we can preserve white spaces and comments
         fileContent.replace(
-          `${versionName}: '${oldVersion}'`,
-          `${versionName}: '${this.newVersion}'`,
+          `${versionName}: ${oldVersion}`,
+          `${versionName}: ${this.newVersion}`,
         ),
       )
     } else {
