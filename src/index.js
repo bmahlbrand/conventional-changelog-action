@@ -29,7 +29,6 @@ async function run() {
     const gitUserName = core.getInput('git-user-name')
     const gitUserEmail = core.getInput('git-user-email')
     const tagPrefix = core.getInput('tag-prefix')
-    const tagPrefix = core.getInput('tag-prefix')
     const preset = !core.getInput('config-file-path') ? core.getInput('preset') : ''
     const preCommit = core.getInput('pre-commit')
     const outputFile = core.getInput('output-file')
