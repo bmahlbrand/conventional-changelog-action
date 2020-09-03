@@ -15,6 +15,12 @@ async function handleVersioningByExtension(ext, file, versionPath, releaseType) 
     throw new Error(`File extension "${ext}" from file "${file}" is not supported`)
   }
 
+  // use version regex to modify the version as specified
+  const versionRegex = core.getInput('version-regex')
+  if(versionRegex !== null){
+    versioning.newVersion = versionRegex.replace("<version>", versioning.newVersion)
+  }
+
   versioning.init(path.resolve(file), versionPath)
 
   // Bump the version in the package.json
@@ -86,7 +92,7 @@ async function run() {
       // If skipVersionFile or skipCommit is true we use GIT to determine the new version because
       // skipVersionFile can mean there is no version file and skipCommit can mean that the user
       // is only interested in tags
-      if (skipVersionFile || skipCommit) {
+      if (skipVersionFile) {
         core.info('Using GIT to determine the new version');
         const versioning = await handleVersioningByExtension('git', versionFile, versionPath, recommendation.releaseType)
         newVersion = versioning.newVersion
@@ -106,11 +112,6 @@ async function run() {
         }));
 
         newVersion = versioning[0].newVersion
-      }
-
-      // use version regex to modify the version as specified
-      if(versionRegex !== null){
-        newVersion = versionRegex.replace("<version>", newVersion)
       }
 
       // Generate the string changelog
