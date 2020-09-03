@@ -29,14 +29,17 @@ async function run() {
     const gitUserName = core.getInput('git-user-name')
     const gitUserEmail = core.getInput('git-user-email')
     const tagPrefix = core.getInput('tag-prefix')
+    const tagPrefix = core.getInput('tag-prefix')
     const preset = !core.getInput('config-file-path') ? core.getInput('preset') : ''
     const preCommit = core.getInput('pre-commit')
     const outputFile = core.getInput('output-file')
     const releaseCount = core.getInput('release-count')
     const versionFile = core.getInput('version-file')
+    const versionRegex = core.getInput('version-regex')
     const versionFileType = core.getInput('version-file-type')
     const versionPath = core.getInput('version-path')
     const skipVersionFile = core.getInput('skip-version-file').toLowerCase() === 'true'
+    const skipTag = core.getInput('skip-tag').toLowerCase() === 'true'
     const skipCommit = core.getInput('skip-commit').toLowerCase() === 'true'
     const skipEmptyRelease = core.getInput('skip-on-empty').toLowerCase() === 'true'
     const conventionalConfigFile = core.getInput('config-file-path')
@@ -47,11 +50,12 @@ async function run() {
     core.info(`Using "${gitUserEmail}" as git user.email`)
     core.info(`Using "${releaseCount}" release count`)
     core.info(`Using "${versionFile}" as version file`)
+    core.info(`Using "${versionRegex}" as version regex`)
     core.info(`Using "${versionFileType}" as version file type`)
     core.info(`Using "${versionPath}" as version path`)
     core.info(`Using "${tagPrefix}" as tag prefix`)
     core.info(`Using "${outputFile}" as output file`)
-    core.info(`Using "${conventionalConfigFile}" as config file`)
+    core.info(`Using "${conventionalConfigFile}" as config file`)    
 
     if (preCommit) {
       core.info(`Using "${preCommit}" as pre-commit script`)
@@ -105,6 +109,10 @@ async function run() {
         newVersion = versioning[0].newVersion
       }
 
+      // use version regex to modify the version as specified
+      if(versionRegex !== null){
+        newVersion = versionRegex.replace("<version>", newVersion)
+      }
 
       // Generate the string changelog
       const stringChangelog = await changelog.generateStringChangelog(tagPrefix, preset, newVersion, 1, config)
@@ -143,7 +151,10 @@ async function run() {
       }
 
       // Create the new tag
-      await git.createTag(gitTag)
+      if(!skipTag) {
+        await git.createTag(gitTag)
+      }
+      
 
       core.info('Push all changes')
       try {
