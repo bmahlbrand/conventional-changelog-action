@@ -21,7 +21,7 @@ module.exports = new (class Yaml extends BaseVersioning{
 
     // use version regex to modify the version as specified
     const versionRegex = core.getInput('version-regex')
-    if(versionRegex != null){
+    if(versionRegex){
       // Use the regex to edit the old version
       this.newVersion = versionRegex.replace("<version>", oldVersion)
       core.info('Used version regex: ' + this.newVersion)
