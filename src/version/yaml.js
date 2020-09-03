@@ -1,5 +1,6 @@
 const objectPath = require('object-path')
 const yaml = require('yaml')
+const core = require('@actions/core')
 
 const BaseVersioning = require('./base')
 const bumpVersion = require('../helpers/bumpVersion')
@@ -18,11 +19,22 @@ module.exports = new (class Yaml extends BaseVersioning{
     const yamlContent = yaml.parse(fileContent) || {}
     const oldVersion = objectPath.get(yamlContent, this.versionPath, null)
 
-    // Get the new version
-    this.newVersion = bumpVersion(
-      releaseType,
-      oldVersion,
-    )
+    // use version regex to modify the version as specified
+    const versionRegex = core.getInput('version-regex')
+    if(versionRegex !== null){
+      // Use the regex to edit the old version
+      this.newVersion = versionRegex.replace("<version>", oldVersion)
+    }
+    else {
+      // Get the new version
+      this.newVersion = bumpVersion(
+        releaseType,
+        oldVersion,
+      )
+    }
+
+
+    
 
     // Update the file
     if (oldVersion) {

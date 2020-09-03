@@ -15,12 +15,6 @@ async function handleVersioningByExtension(ext, file, versionPath, releaseType) 
     throw new Error(`File extension "${ext}" from file "${file}" is not supported`)
   }
 
-  // use version regex to modify the version as specified
-  const versionRegex = core.getInput('version-regex')
-  if(versionRegex !== null){
-    versioning.newVersion = versionRegex.replace("<version>", versioning.newVersion)
-  }
-
   versioning.init(path.resolve(file), versionPath)
 
   // Bump the version in the package.json
