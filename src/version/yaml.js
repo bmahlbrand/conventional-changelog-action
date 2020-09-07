@@ -19,21 +19,25 @@ module.exports = new (class Yaml extends BaseVersioning{
     const yamlContent = yaml.parse(fileContent) || {}
     const oldVersion = objectPath.get(yamlContent, this.versionPath, null)
 
+    // Get the new version
+    this.newVersion = bumpVersion(
+      releaseType,
+      oldVersion,
+    )
+    core.info('Bumped version (NO version regex): ' + this.newVersion)
+    
+    this.versionFinal = this.newVersion
+
     // use version regex to modify the version as specified
     const versionRegex = core.getInput('version-regex')
     if(versionRegex){
       // Use the regex to edit the old version
-      this.newVersion = versionRegex.replace("<version>", oldVersion)
-      core.info('Used version regex: ' + this.newVersion)
+      this.newVersionRegex = versionRegex.replace("<version>", oldVersion)
+      core.info('Used version regex: ' + this.newVersionRegex)
+
+      this.versionFinal = this.newVersionRegex
     }
-    else {
-      // Get the new version
-      this.newVersion = bumpVersion(
-        releaseType,
-        oldVersion,
-      )
-      core.info('Bumped version normally (NO version regex): ' + this.newVersion)
-    }
+    
 
     // Update the file
     if (oldVersion) {
@@ -44,12 +48,12 @@ module.exports = new (class Yaml extends BaseVersioning{
         // We use replace instead of yaml.stringify so we can preserve white spaces and comments
         fileContent.replace(
           `${versionName}: ${oldVersion}`,
-          `${versionName}: ${this.newVersion}`,
+          `${versionName}: ${this.newVersionFinal}`,
         ),
       )
     } else {
       // Update the content with the new version
-      objectPath.set(yamlContent, this.versionPath, this.newVersion)
+      objectPath.set(yamlContent, this.versionPath, this.newVersionFinal)
       this.update(yaml.stringify(yamlContent))
     }
   }
