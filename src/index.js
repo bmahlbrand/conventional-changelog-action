@@ -63,8 +63,8 @@ async function run() {
     core.info(`Skipping empty releases is "${skipEmptyRelease ? 'enabled' : 'disabled'}"`)
     core.info(`Skipping the update of the version file is "${skipVersionFile ? 'enabled' : 'disabled'}"`)
 
-    //core.info('Pull to make sure we have the full git history')
-    //await git.pull()
+    core.info('Pull to make sure we have the full git history')
+    await git.pull()
 
     const config = conventionalConfigFile && require(resolve(process.cwd(), conventionalConfigFile));
 
