@@ -109,6 +109,7 @@ async function run() {
       }
 
       // Generate the string changelog
+      core.info('Generate string changelog: ' + tagPrefix + ' # ' + preset + ' # ' + newVersion + ' # ' + config)
       const stringChangelog = await changelog.generateStringChangelog(tagPrefix, preset, newVersion, 1, config)
       core.info('Changelog generated')
       core.info(stringChangelog)
