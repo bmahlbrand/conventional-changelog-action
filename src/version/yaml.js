@@ -53,7 +53,7 @@ module.exports = new (class Yaml extends BaseVersioning{
       )
     } else {
       // Update the content with the new version
-      objectPath.set(yamlContent, this.versionPath, this.newVersionFinal)
+      objectPath.set(yamlContent, this.versionPath, this.versionFinal)
       this.update(yaml.stringify(yamlContent))
     }
   }

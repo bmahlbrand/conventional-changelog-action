@@ -106,7 +106,7 @@ async function run() {
           return handleVersioningByExtension(extension, file, versionPath, recommendation.releaseType)
         }));
 
-        newVersion = versioning[0].newVersion
+        newVersion = versioning[0].versionFinal
       }
 
       // Generate the string changelog
