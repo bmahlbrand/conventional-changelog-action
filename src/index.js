@@ -40,6 +40,7 @@ async function run() {
     const skipVersionFile = core.getInput('skip-version-file').toLowerCase() === 'true'
     const skipTag = core.getInput('skip-tag').toLowerCase() === 'true'
     const skipCommit = core.getInput('skip-commit').toLowerCase() === 'true'
+    const skipPush = core.getInput('skip-push').toLowerCase() === 'true'
     const skipEmptyRelease = core.getInput('skip-on-empty').toLowerCase() === 'true'
     const conventionalConfigFile = core.getInput('config-file-path')
 
@@ -153,12 +154,15 @@ async function run() {
         core.info('Skip tag')
       }
 
-      core.info('Push all changes')
-      try {
-        await git.push()
-      } catch (error) {
-        core.setFailed(error.message)
+      if(!skipPush){
+        core.info('Push all changes')
+        try {
+          await git.push()
+        } catch (error) {
+          core.setFailed(error.message)
+        }
       }
+      
 
       // Set outputs so other actions (for example actions/create-release) can use it
       core.setOutput('changelog', stringChangelog)

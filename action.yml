@@ -83,6 +83,12 @@ inputs:
     default: 'false'
     required: false
 
+  skip-push:
+    description: 'Do not push'
+    default: 'false'
+    required: false
+    
+
   pre-commit:
     description: 'Path to the pre-commit script file'
     required: false
