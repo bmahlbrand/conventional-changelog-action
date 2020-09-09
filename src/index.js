@@ -143,7 +143,12 @@ async function run() {
           })
         }
         await git.add('.')
-        await git.commit(gitCommitMessage.replace('{version}', gitTag).replace("{releaseNotes}", changelog))
+
+        core.info('Generate commit message')
+        core.info(gitCommitMessage)
+        message = gitCommitMessage.replace('{version}', gitTag).replace('{changelog}', stringChangelog)
+        core.info(message)
+        await git.commit(message)
       }
 
       // Create the new tag
