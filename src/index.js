@@ -146,7 +146,7 @@ async function run() {
 
         core.info('Generate commit message')
         core.info(gitCommitMessage)
-        message = gitCommitMessage.replace('{version}', gitTag).replace('{changelog}', stringChangelog)
+        message = gitCommitMessage.replace('{version}', gitTag).replace('{changelog}', stringChangelog).replace('"', "'")
         core.info(message)
         await git.commit(message)
       }
